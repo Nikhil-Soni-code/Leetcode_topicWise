@@ -1,0 +1,63 @@
+class Solution {
+
+    // Helper function to check if we can make `m` bouquets in `mid` days.
+    private boolean canMakeBouquet(int mid, int[] bloomDay, int m, int k) {
+        int count = 0; // Count of consecutive bloomed flowers
+        int noOfBouquets = 0; // Number of bouquets made so far
+
+        // Traverse through each flower's bloom day
+        for (int i = 0; i < bloomDay.length; i++) {
+            if (bloomDay[i] <= mid) { // Flower blooms by `mid` day
+                count++; // Increment the consecutive bloomed flowers count
+            } else {
+                // If flowers are not consecutive or can't be used, add bouquets possible
+                noOfBouquets += count / k; 
+                count = 0; // Reset count as sequence is broken
+            }
+        }
+        // Add the last set of possible bouquets
+        noOfBouquets += count / k;
+
+        // Return true if we can make at least `m` bouquets
+        return noOfBouquets >= m;
+    }
+
+    public int minDays(int[] bloomDay, int m, int k) {
+        // If the total flowers are less than the required flowers, it's impossible
+        if (bloomDay.length < m * k) {
+            return -1; // Not enough flowers
+        }
+
+        // Find the minimum bloom day
+        int minDayRequired = Integer.MAX_VALUE;
+        for (int i = 0; i < bloomDay.length; i++) {
+            minDayRequired = Math.min(minDayRequired, bloomDay[i]);
+        }
+
+        // Find the maximum bloom day
+        int maxDayRequired = Integer.MIN_VALUE;
+        for (int i = 0; i < bloomDay.length; i++) {
+            maxDayRequired = Math.max(maxDayRequired, bloomDay[i]);
+        }
+
+        // Answer always lies between minDayRequired and maxDayRequired
+        int beg = minDayRequired; // Start of the binary search range
+        int end = maxDayRequired; // End of the binary search range
+        int result = -1; // Variable to store the result
+
+        // Perform binary search to find the minimum day
+        while (beg <= end) {
+            int mid = beg + (end - beg) / 2; // Calculate mid-point to avoid overflow
+
+            // Check if we can make `m` bouquets in `mid` days
+            if (canMakeBouquet(mid, bloomDay, m, k)) {
+                result = mid; // Update result as we found a valid day
+                end = mid - 1; // Try to find a smaller valid day
+            } else {
+                beg = mid + 1; // Increase days to find a valid day
+            }
+        }
+
+        return result; // Return the minimum number of days required
+    }
+}
