@@ -9,6 +9,7 @@ public class Solution {
                 ans+=1<<pow;
             }
             n = n>>>1;//unsigned right shift.
+
             pow--;
         }
         return ans;
