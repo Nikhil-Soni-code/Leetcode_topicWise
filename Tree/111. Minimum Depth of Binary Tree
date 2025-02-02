@@ -1,0 +1,50 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+/**
+ * Solution class to find the minimum depth of a binary tree.
+ */
+class Solution {
+    
+    /**
+     * Helper method to calculate the minimum depth of the tree.
+     *
+     * @param root  The current TreeNode.
+     * @param count The current depth count.
+     * @return The minimum depth of the tree from the current node.
+     */
+    private int depth(TreeNode root, int count) {
+        if (root == null) return Integer.MAX_VALUE; // Return large value for null nodes
+        if (root.left == null && root.right == null) return count + 1; // Leaf node found
+
+        // Recursively calculate depth for left and right subtrees
+        int leftDepth = depth(root.left, count + 1);
+        int rightDepth = depth(root.right, count + 1);
+
+        return Math.min(leftDepth, rightDepth); // Return minimum depth
+    }
+
+    /**
+     * Main function to find the minimum depth of the binary tree.
+     *
+     * @param root The root of the binary tree.
+     * @return The minimum depth of the tree.
+     */
+    public int minDepth(TreeNode root) {
+        if (root == null) return 0; // Edge case: Empty tree
+        return depth(root, 0);
+    }
+}
