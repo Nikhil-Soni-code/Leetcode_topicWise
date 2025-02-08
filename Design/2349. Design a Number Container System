@@ -1,0 +1,54 @@
+class NumberContainers {
+    HashMap<Integer,Integer> map1;//index:number
+    HashMap<Integer,TreeSet<Integer>> map2;//number:index
+
+
+    public NumberContainers() {
+        map1 = new HashMap();
+        map2 = new HashMap();
+    }
+    
+    public void change(int index, int number) {
+        if(map1.containsKey(index)){
+            int prevNumber = map1.get(index);
+            TreeSet<Integer> indexes = map2.get(prevNumber);
+            indexes.remove(index);
+            if(indexes.size()==0){
+                map2.remove(prevNumber);
+            }
+            else{
+                map2.put(prevNumber,indexes);
+            }
+        }
+        if(map2.containsKey(number)){
+            TreeSet<Integer> indexes = map2.get(number);
+            indexes.add(index);
+            map2.put(number,indexes);
+            map1.put(index,number);
+        }
+        else{
+
+            TreeSet<Integer> indexes = new TreeSet();
+            indexes.add(index);
+            map2.put(number,indexes);
+            map1.put(index,number);
+
+        }
+    }
+    
+    public int find(int number) {
+        if(!map2.containsKey(number)){
+            return -1;
+        }
+        else{
+            return map2.get(number).first();
+        }
+    }
+}
+
+/**
+ * Your NumberContainers object will be instantiated and called as such:
+ * NumberContainers obj = new NumberContainers();
+ * obj.change(index,number);
+ * int param_2 = obj.find(number);
+ */
